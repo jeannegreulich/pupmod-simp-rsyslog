@@ -257,23 +257,17 @@ EOM
         end
         let(:hieradata) { 'rsyslog_config_settings' }
 
-        if os_facts[:operatingsystemmajrelease] == '6'
-          it {
+        it {
+          if facts[:operatingsystemmajrelease] == '6'
             is_expected.to contain_rsyslog__rule('00_simp_pre_logging/global.conf')
               .without_content(/net.permitACLWarning=\"off\"\n  net.enableDNS="off"\n/)
-          }
-          it {
             is_expected.to contain_file('/etc/sysconfig/rsyslog').with_content(/SYSLOGD_OPTIONS=\" -l my.host.com -s foo.bar -x\"$/)
-          }
-        else
-          it {
+          else
             is_expected.to contain_rsyslog__rule('00_simp_pre_logging/global.conf')
-              .with_content(/net.permitACLWarning=\"off\"\n  net.enableDNS="off"\n/)
-          }
-          it {
+               .with_content(/net.permitACLWarning=\"off\"\n  net.enableDNS="off"\n/)
             is_expected.to contain_file('/etc/sysconfig/rsyslog').with_content(/SYSLOGD_OPTIONS=\"\"$/)
-          }
-        end
+          end
+        }
       end
     end
   end
